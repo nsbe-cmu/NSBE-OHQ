@@ -1,0 +1,19 @@
+{
+  "name": "nsbe-ohq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nsbe-cmu/NSBE-OHQ.git"
+  },
+  "author": "Joel Anyanti, Carlos Taveras, Jean Paul Nelson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nsbe-cmu/NSBE-OHQ/issues"
+  },
+  "homepage": "https://github.com/nsbe-cmu/NSBE-OHQ#readme"
+}
