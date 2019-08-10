@@ -1,4 +1,4 @@
-import { CourseHelpItem } from '../Models/CourseHelpDataModel.js';
+import { CourseHelpItem } from '../../Models/CourseHelpDataModel.js';
 const axios = require('axios');
 
 export function RequestCourseHelp(course, user){

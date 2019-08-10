@@ -27,7 +27,7 @@ const client = new MongoClient(CONSTANT.DB_URI, {useNewUrlParser : true});
   @return: VOID
 */
 //TODO: Unittest
-function createUser(user) {
+export function createUser(user) {
   const email = user.email
   let proceed = true
   client.connect(err => {

@@ -1,4 +1,4 @@
-import { CourseAvailabilityItem } from '../Models/CourseAvailabilityDataModel.js';
+import { CourseAvailabilityItem } from '../../Models/CourseAvailabilityDataModel.js';
 const axios = require('axios');
 
 export function PostAvailability(course, user,time_in,time_out,location){

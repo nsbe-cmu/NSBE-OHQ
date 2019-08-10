@@ -1,5 +1,6 @@
 import { requestHelp } from './Student/CourseHelpRequestHandler';
 import {postAvailability} from './Tutor/CourseAvailabilityRequestHandler'
+import {createNewUser} from './NewUser/NewUserRequestHandler';
 var express = require('express');
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
@@ -17,6 +18,10 @@ app.post('/requestHelp',jsonParser, function (req, res) {
 app.post('/postAvailability',jsonParser, function (req, res) {
   postAvailability(req,res); 
     
+})
+
+app.post('/newUser',jsonParser,function(req,res){
+  createNewUser(req,res);
 })
 
 app.listen(3000);
