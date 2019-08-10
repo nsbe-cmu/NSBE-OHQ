@@ -11,12 +11,10 @@ app.get('/', function(req,res){
 })
 
 app.post('/requestHelp',jsonParser, function (req, res) {
-  //handle auth shit
   requestHelp(req,res);  
 })
 
 app.post('/postAvailability',jsonParser, function (req, res) {
-  //handle auth shit
   postAvailability(req,res); 
     
 })
