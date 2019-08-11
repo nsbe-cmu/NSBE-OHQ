@@ -1,3 +1,5 @@
 /node_modules
 /res
 /server/course_dump.json
+/yarn.lock
+/mock-client

@@ -1,6 +1,7 @@
 import {RequestCourseHelp}  from '../UIServices/CourseHelpRequestService/CourseHelpRequestService.js';
 import { PostAvailability } from '../UIServices/CourseHelpProviderService/CourseHelpProviderService.js';
 import { AddNewUser } from '../UIServices/NewUserService/NewUserRequestService.js';
+
 console.log("Student requests help for 122")
 RequestCourseHelp('15122','jp');
 console.log("Tutor post availability for 122");
