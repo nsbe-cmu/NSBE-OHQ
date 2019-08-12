@@ -6,7 +6,7 @@
 
 const MongoDB = require('mongodb');
 const K = require('./const')
-const DB = require('./db')
+const DB = require('./db_wrapper')
 const ObjectId = MongoDB.ObjectId
 
 /*          Test Setup           */

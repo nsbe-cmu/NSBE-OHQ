@@ -201,7 +201,7 @@ class DatabaseWrapper {
         if (err) {
           console.log(`[Database Error][${err}`)
         } else if (res.insertedCount === 1) {
-          console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
+          console.log(`[Datbase Success][Added service provider with ID: ${res.insertedId}]`)
           status = true
         }
       })
