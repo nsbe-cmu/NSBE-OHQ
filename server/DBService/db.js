@@ -3,14 +3,19 @@
 'use strict'
 
 /*            Imports            */
-const CONSTANT = require('./const')
+
+const K = require('./const')
+
+const MongoDB = require('mongodb');
+const MongoClient = MongoDB.MongoClient;
+const ObjectId = MongoDB.ObjectId
 
 /*        Database Setup         */
 
-const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(CONSTANT.DB_URI, {useNewUrlParser : true});
+const client = new MongoClient(K.DB_URI, { useNewUrlParser: true });
 
 /*            Functions          */
+
 
 /*
   createUser: adds a new user to the database.
@@ -19,41 +24,189 @@ const client = new MongoClient(CONSTANT.DB_URI, {useNewUrlParser : true});
   @user: JavaScript Object containing user data
   ex:
   {
-    first_name : 'John',
-    last_name : 'Smith',
-    email : 'John.Smith@gmail.com',
-    profile_url : 'https://www.linkedin.com/in/john-smith'
+    first_name : String,
+    last_name : String,
+    email : String,
+    profile_url : String,
+    roles: Array
   }
-  @return: VOID
+  @return: Bool
 */
-//TODO: Unittest
-export function createUser(user) {
+// TODO: Unittest
+function createUser(user) {
+  let status = false
   const email = user.email
-  let proceed = true
-  client.connect(err => {
-    const collection =
-        client.db(CONSTANT.DB_OHQ).collection(CONSTANT.USER_COLLECTION);
 
-    collection.findOne({email : email}, (err, res) => {
+  client.connect(err => {
+    if (err) {
+      console.log(`[Databse Error][${err}]`)
+      return false
+    }
+    const collection =
+      client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+
+    collection.findOne({ email: email }, (err, res) => {
       if (err) {
         console.log(`[Database Error][${err}`)
-        return
       } else if (res) {
         console.log(`[Datbase Error][${res.email} already in database]`)
-        proceed = false
       } else {
         collection.insertOne(user)
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+          .then(res => { console.log(res); status = true })
+          .catch(err => console.log(`[Database Error][${err}`))
       }
     })
   });
   client.close();
+  return status
 }
 
-// createUser({
-//   first_name : 'JP',
-//   last_name : 'Nelson',
-//   email : 'JP.Nelson@gmail.com',
-//   profile_url : 'https://www.linkedin.com/in/jp-nelson'
-// })
+/*
+  addUserRole: Adds a role to a given user.
+           Assumes given role does not exist for user.
+  @user_id: hexstring pointing to specific user
+  @role_id: hexstring pointing to specific role
+  @return: Bool
+*/
+// TODO: Unittest
+function addUserRole(user_id, role_id) {
+  let status = false
+  const _user_id = ObjectId.createFromHexString(user_id)
+  const _role_id = ObjectId.createFromHexString(role_id)
+
+  client.connect(err => {
+    if (err) {
+      console.log(`[Databse Error][${err}]`)
+      return false
+    }
+    const collection =
+      client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+
+    collection.updateOne({ _id: _user_id }, { $push: { roles: _role_id } }, (err, res) => {
+      if (err) {
+        console.log(`[Database Error][${err}`)
+      } else if (res.modifiedCount === res.matchedCount) {
+        console.log(`[Database Success][User: ${user_id} updated with Role: ${role_id}]`);
+        status = true
+      } else {
+        console.log(`[Datbase Error][ID: ${user_id} does not exist database]`)
+      }
+    })
+  });
+  client.close();
+  return status
+}
+
+/*
+getUserRoles: retrieves list of roles assigned to a user.
+@user_id: hexstring pointing to specific user
+@return: Array
+*/
+// TODO: Unittest
+function getUserRoles(user_id) {
+  let ret = []
+  const _user_id = ObjectId.createFromHexString(user_id)
+
+  client.connect(err => {
+    if (err) {
+      console.log(`[Databse Error][${err}]`)
+      return false
+    }
+    const collection =
+      client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+
+    collection.findOne({ _id: _user_id }, (err, res) => {
+      if (err) {
+        console.log(`[Database Error][${err}`)
+      } else if (res.roles) {
+        res.roles.forEach(role_id => {
+          ret.push(K.ROLES_ID[role_id])
+        });
+        console.log(`[Datbase Success][${ret}]`)
+      } else {
+        console.log(`[Datbase Error][ID: ${user_id} does not have any roles]`)
+      }
+    })
+  });
+  client.close();
+  return ret
+}
+
+/*
+addServiceRequest: Add tutoring service request as per user (student).
+@user_id: hexstring pointing to specific user
+@request: JavaScript object containing information about service request
+ex:
+  {
+    _course_id: ObjectId
+    digest_time: Date
+    status: String
+  }
+@return: Bool
+*/
+// TODO: Unittest
+function addServiceRequest(user_id, request) {
+  let status = false
+  request._user_id = ObjectId.createFromHexString(user_id)
+
+  client.connect(err => {
+    if (err) {
+      console.log(`[Databse Error][${err}]`)
+      return false
+    }
+    const collection =
+      client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+
+    collection.insertOne(request, (err, res) => {
+      if (err) {
+        console.log(`[Database Error][${err}`)
+      } else if (res.insertedCount === 1) {
+        console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
+        status = true
+      }
+    })
+  });
+  client.close();
+  return status
+}
+
+/*
+addServiceProvider: Add tutoring service provider as per user (tutor).
+@user_id: hexstring pointing to specific user
+@request: JavaScript object containing information about service request
+ex:
+  {
+    _course_id: ObjectId
+    digest_time: Date
+    status: String
+    location: String
+    availability: { day: String , start: String, end: String }
+  }
+@return: Bool
+*/
+// TODO: Unittest
+function addServiceProvider(user_id, provider) {
+  let status = false
+  provider._user_id = ObjectId.createFromHexString(user_id)
+
+  client.connect(err => {
+    if (err) {
+      console.log(`[Databse Error][${err}]`)
+      return false
+    }
+    const collection =
+      client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+
+    collection.insertOne(provider, (err, res) => {
+      if (err) {
+        console.log(`[Database Error][${err}`)
+      } else if (res.insertedCount === 1) {
+        console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
+        status = true
+      }
+    })
+  });
+  client.close();
+  return status
+}
+
