@@ -7,6 +7,7 @@
 const MongoDB = require('mongodb');
 const K = require('./const')
 const DB = require('./db_wrapper')
+const chai = require('chai')
 const ObjectId = MongoDB.ObjectId
 
 /*          Test Setup           */
@@ -20,6 +21,8 @@ test_db.createUser({
   profile_url : 'https://www.linkedin.com/in/jp-nelson',
   roles: []
 })
+
+test_db.addUserRole('5d4cff134bfdf051bd1dd758', '5d4dc31b6494499ca1ee3c20')
 
 test_db.getUserRoles('5d4cff134bfdf051bd1dd758')
 

@@ -3,3 +3,4 @@
 /server/course_dump.*
 .vscode
 .DS_Store
+yarn.lock

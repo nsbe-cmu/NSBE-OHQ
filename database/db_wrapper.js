@@ -37,29 +37,29 @@ class DatabaseWrapper {
     let status = false
     const email = user.email
 
-    this.client.connect(err => {
-      if (err) {
-        console.log(`[Databse Error][${err}]`)
-        return false
-      }
-      const collection =
-        this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
 
-      collection.findOne({ email: email }, (err, res) => {
-        if (err) {
-          console.log(`[Database Error][${err}`)
-        } else if (res) {
-          console.log(`[Datbase Error][${res.email} already in database]`)
-        } else {
-          collection.insertOne(user)
-            .then(res => { console.log(res); status = true })
-            .catch(err => console.log(`[Database Error][${err}`))
-        }
+        collection.findOne({ email: email })
+          .then((res) => {
+            if (res) {
+              console.log(`[Datbase Error][${res.email} already in database]`)
+            } else {
+              collection.insertOne(user)
+                .then(res => {
+                  console.log(`[Datbase Success][Added user with ID:${res.insertedId}]`);
+                  status = true
+                })
+                .catch(err => console.log(`[Database Error][${err}]`))
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
       })
-    });
-
-    return status
+      .catch(err => console.log(`[Databse Error][${err}]`))
   }
+
 
   /*
   addUserRole: Adds a role to a given user.
@@ -70,32 +70,29 @@ class DatabaseWrapper {
 */
   // TODO: Unittest
   addUserRole(user_id, role_id) {
-    let status = false
     const _user_id = ObjectId.createFromHexString(user_id)
     const _role_id = ObjectId.createFromHexString(role_id)
 
-    this.client.connect(err => {
-      if (err) {
-        console.log(`[Databse Error][${err}]`)
-        return false
-      }
-      const collection =
-        this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
 
-      collection.updateOne({ _id: _user_id }, { $push: { roles: _role_id } }, (err, res) => {
-        if (err) {
-          console.log(`[Database Error][${err}`)
-        } else if (res.modifiedCount === res.matchedCount) {
-          console.log(`[Database Success][User: ${user_id} updated with Role: ${role_id}]`);
-          status = true
-        } else {
-          console.log(`[Datbase Error][ID: ${user_id} does not exist database]`)
-        }
+        collection.updateOne({ _id: _user_id }, { $push: { roles: _role_id } })
+          .then((res) => {
+            if (res.modifiedCount === res.matchedCount) {
+              console.log(`[Database Success][User: ${user_id} updated with role: ${role_id}]`);
+            } else {
+              console.log(`[Datbase Error][ID: ${user_id} does not exist database]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
       })
-    });
-
-    return status
+      .catch(err => console.log(`[Databse Error][${err}]`))
   }
+
+
+
 
   /*
   getUserRoles: retrieves list of roles assigned to a user.
@@ -107,29 +104,26 @@ class DatabaseWrapper {
     let ret = []
     const _user_id = ObjectId.createFromHexString(user_id)
 
-    this.client.connect(err => {
-      if (err) {
-        console.log(`[Databse Error][${err}]`)
-        return false
-      }
-      const collection =
-        this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
 
-      collection.findOne({ _id: _user_id }, (err, res) => {
-        if (err) {
-          console.log(`[Database Error][${err}`)
-        } else if (res.roles) {
-          res.roles.forEach(role_id => {
-            ret.push(K.ROLES_ID[role_id])
-          });
-          console.log(`[Datbase Success][${ret}]`)
-        } else {
-          console.log(`[Datbase Error][ID: ${user_id} does not have any roles]`)
-        }
+        collection.findOne({ _id: _user_id })
+          .then((res) => {
+            if (res.roles) {
+              res.roles.forEach(role_id => {
+                ret.push(K.ROLES_ID[role_id])
+              });
+              console.log(`[Datbase Success][User: ${user_id} has role(s): ${ret}]`)
+            } else {
+              console.log(`[Datbase Error][ID: ${user_id} does not have any roles]`)
+            }
+          })
+          .catch(err => console.log(`[Databse Error][${err}]`))
+
       })
-    });
-
-    return ret
+      .catch(err => console.log(`[Databse Error][${err}]`))
   }
 
   /*
@@ -146,29 +140,25 @@ class DatabaseWrapper {
   */
   // TODO: Unittest
   addServiceRequest(user_id, request) {
-    let status = false
     request._user_id = ObjectId.createFromHexString(user_id)
 
-    this.client.connect(err => {
-      if (err) {
-        console.log(`[Databse Error][${err}]`)
-        return false
-      }
-      const collection =
-        this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
 
-      collection.insertOne(request, (err, res) => {
-        if (err) {
-          console.log(`[Database Error][${err}`)
-        } else if (res.insertedCount === 1) {
-          console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
-          status = true
-        }
+        collection.insertOne(request)
+          .then((res) => {
+            if (res.insertedCount === 1) {
+              console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
       })
-    });
-
-    return status
+      .catch(err => console.log(`[Database Error][${err.message}]`))
   }
+
+
 
   /*
   addServiceProvider: Add tutoring service provider as per user (tutor).
@@ -186,30 +176,23 @@ class DatabaseWrapper {
   */
   // TODO: Unittest
   addServiceProvider(user_id, provider) {
-    let status = false
     provider._user_id = ObjectId.createFromHexString(user_id)
 
-    this.client.connect(err => {
-      if (err) {
-        console.log(`[Databse Error][${err}]`)
-        return false
-      }
-      const collection =
-        this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
 
-      collection.insertOne(provider, (err, res) => {
-        if (err) {
-          console.log(`[Database Error][${err}`)
-        } else if (res.insertedCount === 1) {
-          console.log(`[Datbase Success][Added service provider with ID: ${res.insertedId}]`)
-          status = true
-        }
+        collection.insertOne(provider)
+          .then((res) => {
+            if (res.insertedCount === 1) {
+              console.log(`[Datbase Success][Added service provider with ID: ${res.insertedId}]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err}]`))
       })
-    });
-
-    return status
+      .catch(err => console.log(`[Database Error][${err}]`))
   }
-
 }
 
 module.exports = DatabaseWrapper;
