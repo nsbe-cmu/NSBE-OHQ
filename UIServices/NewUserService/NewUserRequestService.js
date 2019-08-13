@@ -1,8 +1,8 @@
 import { NewUser } from '../../Models/NewUserDataModel';
 const axios = require('axios');
 
-export function AddNewUser(first_name,last_name,email,profile_url){
-    let user = new NewUser(first_name,last_name,email,profile_url);
+export function AddNewUser(first_name,last_name,email,profile_url,role){
+    let user = new NewUser(first_name,last_name,email,profile_url,role);
     axios({
         method: 'post',
         url: 'http://localhost:3000/newUser?email=jp@gmail.com&name=jp',

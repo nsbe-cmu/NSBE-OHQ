@@ -11,8 +11,9 @@ const ObjectId = MongoDB.ObjectId
 
 /*        Database Setup         */
 
-class DatabaseWrapper {
+export class DatabaseWrapper {
   constructor(uri) {
+
     this.uri = uri
     this.client = new MongoClient(this.uri, { useNewUrlParser: true });
   }
@@ -212,5 +213,5 @@ class DatabaseWrapper {
 
 }
 
-module.exports = DatabaseWrapper;
+//module.exports = DatabaseWrapper;
 
