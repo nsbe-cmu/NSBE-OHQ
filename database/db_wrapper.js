@@ -18,7 +18,7 @@ class DatabaseWrapper {
   }
 
   /*
-    createUser: adds a new user to the database.
+    addUser: adds a new user to the database.
                 if user with identical credentials are found,
                 user will not be created.
     @user: JavaScript Object containing user data
@@ -30,11 +30,10 @@ class DatabaseWrapper {
       profile_url : String,
       roles: Array
     }
-    @return: Bool
+    @return: Void
   */
   // TODO: Unittest
-  createUser(user) {
-    let status = false
+  addUser(user) {
     const email = user.email
 
     this.client.connect()
@@ -45,12 +44,11 @@ class DatabaseWrapper {
         collection.findOne({ email: email })
           .then((res) => {
             if (res) {
-              console.log(`[Datbase Error][${res.email} already in database]`)
+              console.log(`[Database Error][${res.email} already in database]`)
             } else {
               collection.insertOne(user)
                 .then(res => {
-                  console.log(`[Datbase Success][Added user with ID:${res.insertedId}]`);
-                  status = true
+                  console.log(`[Database Success][Added user with ID:${res.insertedId}]`);
                 })
                 .catch(err => console.log(`[Database Error][${err}]`))
             }
@@ -58,6 +56,8 @@ class DatabaseWrapper {
           .catch(err => console.log(`[Database Error][${err.message}]`))
       })
       .catch(err => console.log(`[Databse Error][${err}]`))
+      .finally(() => false)
+
   }
 
 
@@ -66,7 +66,7 @@ class DatabaseWrapper {
            Assumes given role does not exist for user.
   @user_id: hexstring pointing to specific user
   @role_id: hexstring pointing to specific role
-  @return: Bool
+  @return: Void
 */
   // TODO: Unittest
   addUserRole(user_id, role_id) {
@@ -83,7 +83,7 @@ class DatabaseWrapper {
             if (res.modifiedCount === res.matchedCount) {
               console.log(`[Database Success][User: ${user_id} updated with role: ${role_id}]`);
             } else {
-              console.log(`[Datbase Error][ID: ${user_id} does not exist database]`)
+              console.log(`[Database Error][ID: ${user_id} does not exist database]`)
             }
           })
           .catch(err => console.log(`[Database Error][${err.message}]`))
@@ -115,7 +115,7 @@ class DatabaseWrapper {
               res.roles.forEach(role_id => {
                 ret.push(K.ROLES_ID[role_id])
               });
-              console.log(`[Datbase Success][User: ${user_id} has role(s): ${ret}]`)
+              console.log(`[Database Success][User: ${user_id} has role(s): ${ret}]`)
             } else {
               console.log(`[Datbase Error][ID: ${user_id} does not have any roles]`)
             }
@@ -136,9 +136,9 @@ class DatabaseWrapper {
       digest_time: Date
       status: String
     }
-  @return: Bool
+  @return: Void
   */
-  // TODO: Unittest
+  // TODO: Void
   addServiceRequest(user_id, request) {
     request._user_id = ObjectId.createFromHexString(user_id)
 
@@ -150,7 +150,62 @@ class DatabaseWrapper {
         collection.insertOne(request)
           .then((res) => {
             if (res.insertedCount === 1) {
-              console.log(`[Datbase Success][Added service request with ID: ${res.insertedId}]`)
+              console.log(`[Database Success][Added service request with ID: ${res.insertedId}]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
+      })
+      .catch(err => console.log(`[Database Error][${err.message}]`))
+  }
+
+  /*
+  updateServiceRequest: Update tutoring service request as per user (student).
+  @request_id: hexstring pointing to specific service request
+  @return: Void
+  */
+  // TODO: Void
+  updateServiceRequest(request_id, request) {
+    let _id = ObjectId.createFromHexString(request_id)
+    request._id = _id
+
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+
+        collection.replaceOne({ _id: _id }, request)
+          .then((res) => {
+            if (res.modifiedCount === 1) {
+              console.log(`[Database Success][Updated service request with ID: ${request_id}]`)
+            } else {
+              console.log(`[Database Error][Service request with ID: ${_id} does not exist]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
+      })
+      .catch(err => console.log(`[Database Error][${err.message}]`))
+  }
+
+  /*
+  deleteServiceRequest: Delete tutoring service request as per user (student).
+  @request_id: hexstring pointing to specific service request
+  @return: Void
+  */
+  // TODO: Void
+  deleteServiceRequest(request_id) {
+    let _id = ObjectId.createFromHexString(request_id)
+
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+
+        collection.deleteOne({ _id: _id })
+          .then((res) => {
+            if (res.deletedCount === 1) {
+              console.log(`[Database Success][Deleted service request with ID: ${request_id}]`)
+            } else {
+              console.log(`[Database Error][Service request with ID: ${_id} does not exist]`)
             }
           })
           .catch(err => console.log(`[Database Error][${err.message}]`))
@@ -163,7 +218,7 @@ class DatabaseWrapper {
   /*
   addServiceProvider: Add tutoring service provider as per user (tutor).
   @user_id: hexstring pointing to specific user
-  @request: JavaScript object containing information about service request
+  @provider: JavaScript object containing information about service provider
   ex:
     {
       _course_id: ObjectId
@@ -172,7 +227,7 @@ class DatabaseWrapper {
       location: String
       availability: { day: String , start: String, end: String }
     }
-  @return: Bool
+  @return: Void
   */
   // TODO: Unittest
   addServiceProvider(user_id, provider) {
@@ -186,13 +241,69 @@ class DatabaseWrapper {
         collection.insertOne(provider)
           .then((res) => {
             if (res.insertedCount === 1) {
-              console.log(`[Datbase Success][Added service provider with ID: ${res.insertedId}]`)
+              console.log(`[Database Success][Added service provider with ID: ${res.insertedId}]`)
             }
           })
           .catch(err => console.log(`[Database Error][${err}]`))
       })
       .catch(err => console.log(`[Database Error][${err}]`))
   }
+
+  /*
+  updateServiceProvider: Update tutoring service provider as per user (student).
+  @provider_id: hexstring pointing to specific service provider
+  @return: Void
+  */
+  // TODO: Void
+  updateServiceProvider(provider_id, provider) {
+    let _id = ObjectId.createFromHexString(provider_id)
+    provider._id = _id
+
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+
+        collection.replaceOne({ _id: _id }, provider)
+          .then((res) => {
+            if (res.modifiedCount === 1) {
+              console.log(`[Database Success][Updated service provider with ID: ${provider_id}]`)
+            } else {
+              console.log(`[Database Error][Service provider with ID: ${_id} does not exist]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
+      })
+      .catch(err => console.log(`[Database Error][${err.message}]`))
+  }
+
+  /*
+  deleteServiceProvider: Delete tutoring service provider as per user (tutor).
+  @provider_id: hexstring pointing to specific service provider
+  @return: Void
+  */
+  // TODO: Void
+  deleteServiceProvider(provider_id) {
+    let _id = ObjectId.createFromHexString(provider_id)
+
+    this.client.connect()
+      .then(() => {
+        const collection =
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+
+        collection.deleteOne({ _id: _id })
+          .then((res) => {
+            if (res.deletedCount === 1) {
+              console.log(`[Database Success][Deleted service provider with ID: ${provider_id}]`)
+            } else {
+              console.log(`[Database Error][Service provider with ID: ${_id} does not exist]`)
+            }
+          })
+          .catch(err => console.log(`[Database Error][${err.message}]`))
+      })
+      .catch(err => console.log(`[Database Error][${err.message}]`))
+  }
+
 }
 
 module.exports = DatabaseWrapper;
