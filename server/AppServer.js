@@ -1,7 +1,5 @@
 import { DatabaseWrapper } from '../database/db_wrapper.js';
-import { requestHelp } from './Student/CourseHelpRequestHandler';
-import {postAvailability} from './Tutor/CourseAvailabilityRequestHandler'
-import {createNewUser} from './NewUser/NewUserRequestHandler';
+import { RequestHandler } from './RequestHandler.js';
 import  express from 'express';
 import bodyParser from 'body-parser';
 
@@ -10,22 +8,27 @@ export class AppServer{
         this.db_manager = new DatabaseWrapper(uri);
         this.jsonParser = bodyParser.json();
         this.app = express();
-        this.init_router(this.db_manager)
+        this.req_handler = new RequestHandler(this.db_manager);  
+        this.init_router(this.req_handler)
     }
 
-    init_router(db_manager){
+    init_router(req_handler){
           
           this.app.post('/requestHelp',this.jsonParser, function (req, res) {
-            requestHelp(req,res);  
+            req_handler.requestHelp(req,res);  
           })
           
           this.app.post('/postAvailability',this.jsonParser, function (req, res) {
-            postAvailability(req,res); 
+            req_handler.postAvailability(req,res); 
               
           })
           
           this.app.post('/newUser',this.jsonParser,function(req,res){
-            createNewUser(req,res,db_manager);
+            req_handler.createNewUser(req,res);
+          })
+
+          this.app.get('/userInfo',this.jsonParser,function(req,res){
+            req_handler.getUserInfo(req,res,db_manager);
           })
           
           this.app.listen(3000);
