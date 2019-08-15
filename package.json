@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/nsbe-cmu/NSBE-OHQ#readme",
   "dependencies": {
+    "dotenv": "^8.0.0",
+    "eslint": "^6.1.0",
     "mongodb": "^3.3.0-beta2"
   },
   "devDependencies": {

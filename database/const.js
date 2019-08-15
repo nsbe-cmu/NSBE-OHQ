@@ -2,11 +2,15 @@
 // Joel Anyanti | 08/09/2019
 'use strict'
 
-/*            constants           */
+/*             Imports            */
 
-const USERNAME = 'nsbeadmin'
-const PASS = 'i1RRSUNz0bjMG3RV'
-const CLUSTER = 'nsbe-ohq-pz6dp'
+require('dotenv').config({path: '../.env'})
+
+/*            Constants           */
+
+const USERNAME = process.env.MONGO_USER
+const PASS = process.env.MONGO_PASS
+const CLUSTER = process.env.MONGO_CLUSTER
 
 module.exports = {
 
@@ -24,4 +28,4 @@ module.exports = {
     '5d4dc3276494499ca1ee3c22' : 'Tutor'
   }
 
-};
+}

@@ -4,10 +4,9 @@
 
 /*            Imports            */
 
-const MongoDB = require('mongodb');
+const MongoDB = require('mongodb')
 const K = require('./const')
 const DB = require('./db_wrapper')
-const chai = require('chai')
 const ObjectId = MongoDB.ObjectId
 
 /*          Test Setup           */
