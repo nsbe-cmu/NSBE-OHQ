@@ -1,6 +1,6 @@
 /node_modules
 /res
-/server/course_dump.*
+/server/*_dump.*
 .vscode
 .DS_Store
 yarn.lock
