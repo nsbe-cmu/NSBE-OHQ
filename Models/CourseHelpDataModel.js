@@ -7,7 +7,6 @@ function getDigestTime(){
 }
 
 export function CourseHelpItem(course, user){
-    this.id = 0
     this.course = course;
     this.user = user;
     this.digest_time = getDigestTime();

@@ -7,7 +7,6 @@ function getDigestTime(){
 }
 
 export function CourseAvailabilityItem(course, user, availabilty,location){
-    this.id = 0
     this.course = course;
     this.user = user;
     this.digest_time = getDigestTime();
