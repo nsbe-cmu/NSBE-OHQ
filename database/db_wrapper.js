@@ -5,8 +5,8 @@
 /*            Imports            */
 
 const K = require('./const')
-const MongoDB = require('mongodb');
-const MongoClient = MongoDB.MongoClient;
+const MongoDB = require('mongodb')
+const MongoClient = MongoDB.MongoClient
 const ObjectId = MongoDB.ObjectId
 
 /*        Database Setup         */
@@ -15,7 +15,7 @@ export class DatabaseWrapper {
   constructor(uri) {
 
     this.uri = uri
-    this.client = new MongoClient(this.uri, { useNewUrlParser: true });
+    this.client = new MongoClient(this.uri, { useNewUrlParser: true })
   }
 
   /*
@@ -40,7 +40,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION)
 
         collection.findOne({ email: email })
           .then((res) => {
@@ -49,7 +49,7 @@ export class DatabaseWrapper {
             } else {
               collection.insertOne(user)
                 .then(res => {
-                  console.log(`[Database Success][Added user with ID:${res.insertedId}]`);
+                  console.log(`[Database Success][Added user with ID:${res.insertedId}]`)
                 })
                 .catch(err => console.log(`[Database Error][${err}]`))
             }
@@ -77,12 +77,12 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION)
 
         collection.updateOne({ _id: _user_id }, { $push: { roles: _role_id } })
           .then((res) => {
             if (res.modifiedCount === res.matchedCount) {
-              console.log(`[Database Success][User: ${user_id} updated with role: ${role_id}]`);
+              console.log(`[Database Success][User: ${user_id} updated with role: ${role_id}]`)
             } else {
               console.log(`[Database Error][ID: ${user_id} does not exist database]`)
             }
@@ -108,14 +108,14 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.USER_COLLECTION)
 
         collection.findOne({ _id: _user_id })
           .then((res) => {
             if (res.roles) {
               res.roles.forEach(role_id => {
                 ret.push(K.ROLES_ID[role_id])
-              });
+              })
               console.log(`[Database Success][User: ${user_id} has role(s): ${ret}]`)
             } else {
               console.log(`[Datbase Error][ID: ${user_id} does not have any roles]`)
@@ -146,7 +146,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION)
 
         collection.insertOne(request)
           .then((res) => {
@@ -172,7 +172,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION)
 
         collection.replaceOne({ _id: _id }, request)
           .then((res) => {
@@ -199,7 +199,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_REQUEST_COLLECTION)
 
         collection.deleteOne({ _id: _id })
           .then((res) => {
@@ -237,7 +237,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION)
 
         collection.insertOne(provider)
           .then((res) => {
@@ -263,7 +263,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION)
 
         collection.replaceOne({ _id: _id }, provider)
           .then((res) => {
@@ -290,7 +290,7 @@ export class DatabaseWrapper {
     this.client.connect()
       .then(() => {
         const collection =
-          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION);
+          this.client.db(K.DB_OHQ).collection(K.SERVICE_PROVIDER_COLLECTION)
 
         collection.deleteOne({ _id: _id })
           .then((res) => {

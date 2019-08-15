@@ -27,7 +27,8 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "mongodb": "^3.3.0-beta2",
-    "mysql": "^2.17.1"
+    "mysql": "^2.17.1",
+    "eslint": "^6.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
