@@ -2,7 +2,7 @@
 # Joel Anyanti | 08/09/2019
 
 #               imports             #
-import json, csv
+import json, csv, string
 import cmu_course_api
 
 #             functions             #
@@ -16,19 +16,22 @@ def format_data(courses, format):
     res = []
     for course_id in courses:
         course = dict()
-        course['course_id'] = course_id
-        course['name'] = courses[course_id]['name']
-        course['department'] = courses[course_id]['department']
+        course['course_id'] = course_id.strip()
+        course['name'] = courses[course_id]['name'].strip()
+        course['department'] = courses[course_id]['department'].strip()
         if not (courses[course_id]['units'] == None):
             course['units'] = int(courses[course_id]['units'])
         if 'units' in course:
             res.append(course)
 
     if (format == 'json'):
-        with open('course_dump.json', 'w') as fp_json:
-            json.dump(res, fp_json)
+        with open('course_dump.json', 'w+') as fp_json:
+            for course in res:
+                json.dump(course, fp_json)
+                fp_json.write('\n')
+
     elif (format == 'csv'):
-        with open('course_dump.csv', 'w') as fp_csv:
+        with open('course_dump.csv', 'w+') as fp_csv:
             fieldnames = ['course_id', 'name', 'department', 'units']
             writer = csv.DictWriter(fp_csv, fieldnames=fieldnames)
             writer.writeheader()
@@ -39,7 +42,7 @@ def format_data(courses, format):
     return res
 
 '''
-    get_course :  retrieves course information using an api call
+    get_courses :  retrieves course information using an api call
                   performs formatting to shrink data
     @semester: semester for which the course information should originate
     @format: dumps output in desired format (json or csv)

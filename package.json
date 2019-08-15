@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r esm server/AppServer.js",
-    "demo": "node -r esm mock-client/client-mock.js"
+    "demo": "node -r esm mock-client/client-mock.js",
+    "run_unittests": "mocha"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,9 @@
     "express": "^4.17.1",
     "mongodb": "^3.3.0-beta2",
     "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
   }
 }
