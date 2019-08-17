@@ -7,4 +7,5 @@
 /server/*_dump.*
 .vscode
 .DS_Store
+.env
 yarn.lock
