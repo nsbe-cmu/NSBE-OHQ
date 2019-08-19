@@ -1,6 +1,5 @@
 /node_modules
 /res
 /server/*_dump.*
-.vscode
-.DS_Store
 yarn.lock
+.*

@@ -22,6 +22,7 @@ module.exports = {
   COURSE_COLLECTION : 'course_test',
   SERVICE_REQUEST_COLLECTION : 'service_request_test',
   SERVICE_PROVIDER_COLLECTION : 'service_provider_test',
+  SERVICE_SESSION_COLLECTION : 'service_session_test',
   ROLES_ID : {
     '5d4dc31b6494499ca1ee3c20' : 'Admin',
     '5d4dc3276494499ca1ee3c21' : 'Student',

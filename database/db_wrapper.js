@@ -1,4 +1,4 @@
-// db.js
+// db_wrapper.js
 // Joel Anyanti | 08/09/2019
 'use strict'
 
@@ -282,7 +282,7 @@ class DatabaseWrapper {
   @provider_id: hexstring pointing to specific service provider
   @return: Void
   */
-  // TODO: Void
+  // TODO: Unittest
   deleteServiceProvider(provider_id) {
     let _id = ObjectId.createFromHexString(provider_id)
 
@@ -302,6 +302,38 @@ class DatabaseWrapper {
           .catch(err => console.log(`[Database Error][${err.message}]`))
       })
       .catch(err => console.log(`[Database Error][${err.message}]`))
+  }
+
+  /*
+  getCourseById: Delete tutoring service provider as per user (tutor).
+  @course_id: ID of course to be found
+  @return: Promise which resolves to course document object
+  */
+  async getCourseById(course_id) {
+    course_id = course_id.trim() 
+
+    const promise = new Promise ((resolve, reject) => {
+      this.client.connect()
+        .then(() => {
+          const collection = 
+          this.client.db(K.DB_OHQ).collection(K.COURSE_COLLECTION)
+
+          collection.findOne({course_id: course_id})
+            .then(res => {
+              console.log(`[Database Success][Found course with ID: ${res._id}]`)
+              resolve(res)
+            })
+            .catch(() => {
+              console.log(`[Database Error][No document with course_id: ${course_id} found]`)
+              reject({})
+            })
+        })
+        .catch(err => {
+          console.log(`[Database Error][${err.message}]`)
+          return reject({})
+        })
+    })
+    return await promise
   }
 
 }
