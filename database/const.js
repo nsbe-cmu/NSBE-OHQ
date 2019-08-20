@@ -20,6 +20,7 @@ module.exports = {
   ROLES_COLLECTION : 'roles_test',
   USER_ROLES_COLLECTION : 'user_roles_test',
   COURSE_COLLECTION : 'course_test',
+  LOCATION_COLLECTION: 'location_test',
   SERVICE_REQUEST_COLLECTION : 'service_request_test',
   SERVICE_PROVIDER_COLLECTION : 'service_provider_test',
   SERVICE_SESSION_COLLECTION : 'service_session_test',

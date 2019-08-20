@@ -69,6 +69,16 @@ var test_db = new DB(K.DB_URI)
 // }
 // )
 
-test_db.getCourseById('18-213')
-  .then(res => console.log(res))
-  .catch(err => console.log(err))
+// test_db.getCourseById('18-213')
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err))
+
+// test_db.getCourseByDepartment('Electrical & Computer Engineering')
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err))
+
+// test_db.getLocationByBuilding('Wean Hall')
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err))
+
+test_db.getDistinct()

@@ -305,7 +305,7 @@ class DatabaseWrapper {
   }
 
   /*
-  getCourseById: Delete tutoring service provider as per user (tutor).
+  getCourseById: Retrieve course document given corresponding course_id
   @course_id: ID of course to be found
   @return: Promise which resolves to course document object
   */
@@ -331,6 +331,70 @@ class DatabaseWrapper {
         .catch(err => {
           console.log(`[Database Error][${err.message}]`)
           return reject({})
+        })
+    })
+    return await promise
+  }
+
+  /*
+  getCourseByDepartment: Retrieve course documents given corresponding department
+  @department: Department  
+  @return: Promise which resolves to course document objects
+  */
+  async getCourseByDepartment(department) {
+    department = department.trim() 
+
+    const promise = new Promise ((resolve, reject) => {
+      this.client.connect()
+        .then(() => {
+          const collection = 
+        this.client.db(K.DB_OHQ).collection(K.COURSE_COLLECTION)
+
+          collection.find({department: department}).toArray()
+            .then(res => {
+              console.log(`[Database Success][Found ${res.length} course(s) with department: ${department}]`)
+              resolve(res)
+            })
+            .catch(() => {
+              console.log(`[Database Error][No document(s) with department: ${department} found]`)
+              reject([])
+            })
+        })
+        .catch(err => {
+          console.log(`[Database Error][${err.message}]`)
+          reject([])
+        })
+    })
+    return await promise
+  }
+
+  /*
+  getCourseByDepartment: Retrieve location documents given corresponding building
+  @building: Building of which to search for locations  
+  @return: Promise which resolves to course document objects
+  */
+  async getLocationByBuilding(building) {
+    building = building.trim() 
+
+    const promise = new Promise ((resolve, reject) => {
+      this.client.connect()
+        .then(() => {
+          const collection = 
+      this.client.db(K.DB_OHQ).collection(K.LOCATION_COLLECTION)
+
+          collection.find({building: building}).toArray()
+            .then(res => {
+              console.log(`[Database Success][Found ${res.length} course(s) with building: ${building}]`)
+              resolve(res)
+            })
+            .catch(() => {
+              console.log(`[Database Error][No document(s) with building: ${building} found]`)
+              reject([])
+            })
+        })
+        .catch(err => {
+          console.log(`[Database Error][${err.message}]`)
+          reject([])
         })
     })
     return await promise
