@@ -337,6 +337,38 @@ class DatabaseWrapper {
   }
 
   /*
+  getCourseById: Retrieve course document given corresponding course_name
+  @course_name: Name of course to be found
+  @return: Promise which resolves to course document object
+  */
+  async getCourseByName(course_name) {
+    course_name = course_name.trim() 
+
+    const promise = new Promise ((resolve, reject) => {
+      this.client.connect()
+        .then(() => {
+          const collection = 
+        this.client.db(K.DB_OHQ).collection(K.COURSE_COLLECTION)
+
+          collection.findOne({name: course_name})
+            .then(res => {
+              console.log(`[Database Success][Found course with ID: ${res._id}]`)
+              resolve(res)
+            })
+            .catch(() => {
+              console.log(`[Database Error][No document with course_name: ${course_name} found]`)
+              reject({})
+            })
+        })
+        .catch(err => {
+          console.log(`[Database Error][${err.message}]`)
+          return reject({})
+        })
+    })
+    return await promise
+  }
+
+  /*
   getCourseByDepartment: Retrieve course documents given corresponding department
   @department: Department  
   @return: Promise which resolves to course document objects

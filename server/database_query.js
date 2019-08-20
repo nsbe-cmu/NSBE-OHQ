@@ -1,6 +1,8 @@
 // database_query.js 
 // Joel Anyanti | 08/20/2019
 
+'use strict'
+
 /*
   File contains constants that client application
   will refer to to query the databse
