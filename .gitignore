@@ -1,1 +1,4 @@
 /node_modules
+/ui/node_modules
+yarn.lock
+.env
