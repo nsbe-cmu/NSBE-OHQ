@@ -1,6 +1,6 @@
 // pages/about.js
 
-import Layout from '../components/MyLayout';
+import Layout from '../components/Layout';
 import { FormExampleFieldControlId, FormNoGener } from '../components/Forms'
 import { Component }  from 'react'
 
