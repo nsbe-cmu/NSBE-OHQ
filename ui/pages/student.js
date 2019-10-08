@@ -11,7 +11,7 @@ export default class Student extends Component {
 
     render() {
         return(
-          <Layout>
+          <Layout page='student'>
             <p>This is the student page</p>
           </Layout>
         )

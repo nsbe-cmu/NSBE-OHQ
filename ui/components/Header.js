@@ -62,13 +62,14 @@ class DesktopContainer extends Component {
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
+  handleItemClick = (e, data) => this.setState({ activeItem: data.name })
+
 
   render() {
-    const { children, content } = this.props
+    const { children, page } = this.props
     const { fixed } = this.state
-
-    //console.log(this.props)
-
+    const activeItem  = page
+    
     return (
       <Responsive getWidth={getWidth} minWidth={Responsive.onlyTablet.minWidth}>
         <Visibility
@@ -79,33 +80,49 @@ class DesktopContainer extends Component {
           <Segment
             inverted
             textAlign='center'
-            style={{padding: '1em 0em' }}
+            style={{padding: '0em 0em' }}
             vertical
+            color="green"
           >
             <Menu
               fixed={fixed ? 'top' : null}
               inverted={!fixed}
               pointing={!fixed}
               secondary={!fixed}
+              onItemClick={this.handleItemClick}
               size='large'
             >
               <Container>
                 <Link href="/">
-                  <Menu.Item as='a' active>Home</Menu.Item>
+                  <Menu.Item as='a'
+                  name='home' 
+                  active={activeItem === 'home'}
+                  >Home</Menu.Item>
                 </Link>
                 <Link href="/student">
-                  <Menu.Item as='a'>Student</Menu.Item>
+                  <Menu.Item as='a'
+                  name='student' 
+                  active={activeItem === 'student'}
+                  >Student</Menu.Item>
                 </Link>
                 <Link href="/tutor">
-                  <Menu.Item as='a'>Tutor</Menu.Item>
-                </Link> 
-                <Link href="/admin">
-                  <Menu.Item as='a'>Admin</Menu.Item>
+                  <Menu.Item as='a'
+                  name='tutor' 
+                  active={activeItem === 'tutor'}
+                  >Tutor</Menu.Item>
                 </Link>
-                <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
+                <Link href="/admin">
+                  <Menu.Item as='a'
+                  name='admin' 
+                  active={activeItem === 'admin'}
+                  >Admin</Menu.Item>
+                </Link>
+                <Menu.Item position='right' >
+                  <Link href="/login">
+                    <Button as='a' inverted={!fixed}>
+                      Log in
+                    </Button>
+                  </Link> 
                   <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button>
@@ -195,10 +212,10 @@ MobileContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const ResponsiveContainer = ({ children }) => (
+const ResponsiveContainer = ({ children, page}) => (
   <div>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
-    <DesktopContainer>{children}</DesktopContainer>
+    <DesktopContainer page={page}>{children}</DesktopContainer>
     <MobileContainer>{children}</MobileContainer>
   </div>
 )

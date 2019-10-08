@@ -11,7 +11,7 @@ export default class Tutor extends Component {
 
     render() {
         return(
-          <Layout>
+          <Layout page='tutor'>
             <p>This is the tutor page</p>
           </Layout>
         )

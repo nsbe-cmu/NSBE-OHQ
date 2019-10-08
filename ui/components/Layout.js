@@ -2,7 +2,7 @@ import ResponsiveContainer from './Header';
 
 const Layout = props => (
   <div>
-    <ResponsiveContainer/>
+    <ResponsiveContainer page={props.page}/>
       {props.children}
   </div>
 )

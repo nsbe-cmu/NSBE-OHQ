@@ -11,7 +11,7 @@ export default class Admin extends Component {
 
     render() {
         return(
-          <Layout>
+          <Layout page='admin'>
             <p>This is the admin page</p>
           </Layout>
         )
